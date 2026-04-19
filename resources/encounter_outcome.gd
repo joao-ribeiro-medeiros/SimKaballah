@@ -15,3 +15,4 @@ extends Resource
 @export var narrative: String = ""
 @export var dilemma_chosen: int = -1 # index of dilemma option, -1 if no dilemma
 @export var game_timestamp: float = 0.0
+@export var recruited_mago_name: String = "" # for FIND_MAGO encounters

@@ -33,3 +33,7 @@ extends Resource
 
 # Spawn probability per tick (0.0 to 1.0)
 @export var spawn_chance: float = 0.1
+
+# For FIND_MAGO encounters: template data for the new mago on success
+# Keys: mago_name, tradition, attributes (dict), spheres (dict)
+@export var reward_mago: Dictionary = {}

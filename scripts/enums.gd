@@ -22,7 +22,11 @@ enum Paradox {
 enum EncounterType {
 	STORY,
 	RANDOM,
-	COSMIC
+	COSMIC,
+	COMBAT,
+	FIND_NODE,
+	COSMIC_BALANCE,
+	FIND_MAGO
 }
 
 enum CosmicTendency {

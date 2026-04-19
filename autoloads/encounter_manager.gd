@@ -136,6 +136,14 @@ func resolve_encounter(enc_def: EncounterDef, assigned_magos: Array, dilemma_cho
 			best_mago.health = Enums.Health.HURT
 			SignalBus.mago_stat_changed.emit(best_mago, "health", old_health, best_mago.health)
 
+	# FIND_MAGO: recruit new mago on success
+	if success and enc_def.encounter_type == Enums.EncounterType.FIND_MAGO and not enc_def.reward_mago.is_empty():
+		var new_mago := _create_mago_from_template(enc_def.reward_mago, enc_def.location_id)
+		if new_mago:
+			PartyManager.add_mago(new_mago)
+			outcome.recruited_mago_name = new_mago.mago_name
+			SignalBus.mago_stat_changed.emit(new_mago, "recruited", 0, 1)
+
 	# Cooldown and cleanup
 	cooldowns[enc_def.id] = enc_def.cooldown_minutes
 	active_encounters.erase(enc_def.location_id)
@@ -155,6 +163,7 @@ func _fill_narrative(template: String, outcome: EncounterOutcome, mago: MagoStat
 	text = text.replace("{location}", outcome.location_id)
 	text = text.replace("{sphere}", outcome.stat_used)
 	text = text.replace("{result}", "succeeded" if outcome.success else "failed")
+	text = text.replace("{recruited_mago}", outcome.recruited_mago_name)
 	return text
 
 
@@ -172,3 +181,29 @@ func register_encounter(enc_def: EncounterDef) -> void:
 
 func load_catalog(encounters: Array[EncounterDef]) -> void:
 	encounter_catalog = encounters
+
+
+func _create_mago_from_template(template: Dictionary, location_id: String) -> MagoStats:
+	if PartyManager.magos.size() >= PartyManager.MAX_PARTY_SIZE:
+		return null
+	var mago := MagoStats.new()
+	mago.mago_name = template.get("mago_name", "Unknown Mago")
+	mago.tradition = template.get("tradition", "Orphan")
+	mago.arete = template.get("arete", 1)
+	mago.current_location = location_id
+	var attrs: Dictionary = template.get("attributes", {})
+	for attr_name in attrs:
+		match attr_name:
+			"strength": mago.strength = attrs[attr_name]
+			"dexterity": mago.dexterity = attrs[attr_name]
+			"stamina_attr": mago.stamina_attr = attrs[attr_name]
+			"charisma": mago.charisma = attrs[attr_name]
+			"manipulation": mago.manipulation = attrs[attr_name]
+			"appearance": mago.appearance = attrs[attr_name]
+			"intelligence": mago.intelligence = attrs[attr_name]
+			"wits": mago.wits = attrs[attr_name]
+			"perception": mago.perception = attrs[attr_name]
+	var spheres: Dictionary = template.get("spheres", {})
+	for sphere_name in spheres:
+		mago.set_sphere(sphere_name, spheres[sphere_name])
+	return mago
