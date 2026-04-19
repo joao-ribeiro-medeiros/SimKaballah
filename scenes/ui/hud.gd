@@ -25,7 +25,7 @@ func _on_time_tick(_delta: float) -> void:
 	if GameClock.time_scale == 0.0:
 		scale_text = "PAUSED"
 	else:
-		scale_text = "%gx" % GameClock.time_scale
+		scale_text = str(GameClock.time_scale) + "x"
 	time_label.text = "%s [%s]" % [GameClock.get_time_string(), scale_text]
 
 

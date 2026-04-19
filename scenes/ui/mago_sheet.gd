@@ -101,8 +101,8 @@ func _refresh_spheres() -> void:
 		var hbox := HBoxContainer.new()
 		var val := m.get_sphere(sphere_name)
 		var display_name := _get_sphere_display_name(sphere_name)
-		var rank_name := SPHERE_RANK_NAMES[val]
-		var rank_color := RANK_COLORS[val]
+		var rank_name: String = SPHERE_RANK_NAMES[val]
+		var rank_color: Color = RANK_COLORS[val]
 
 		var label := Label.new()
 		label.text = display_name

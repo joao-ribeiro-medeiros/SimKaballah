@@ -14,8 +14,7 @@ func _ready() -> void:
 	queue_redraw()
 	SignalBus.encounter_spawned.connect(_on_encounter_spawned)
 	SignalBus.encounter_resolved.connect(_on_encounter_resolved)
-	SignalBus.party_moved.connect(_on_party_moved)
-	SignalBus.party_arrived.connect(_on_party_arrived)
+	SignalBus.mago_moved.connect(_on_mago_moved)
 	_spawn_mago_tokens()
 
 
@@ -84,53 +83,88 @@ func get_location_position(location_id: String) -> Vector2:
 	return Vector2.ZERO
 
 
+func get_nearest_location(world_pos: Vector2, max_distance: float = 80.0) -> String:
+	var best_id := ""
+	var best_dist := max_distance
+	for loc_id in locations:
+		var loc_pos: Vector2 = locations[loc_id].position
+		var dist := world_pos.distance_to(loc_pos)
+		if dist < best_dist:
+			best_dist = dist
+			best_id = loc_id
+	return best_id
+
+
 func _spawn_mago_tokens() -> void:
 	var token_scene := preload("res://scenes/map/mago_token.tscn")
-	var start_pos := get_location_position(PartyManager.current_location)
 	var idx := 0
 	for mago in PartyManager.magos:
 		var token: Node2D = token_scene.instantiate()
 		party_tokens_node.add_child(token)
 		if token.has_method("setup"):
 			token.setup(mago)
-		# Offset tokens so they don't overlap
+		# Connect drag signal
+		if token.has_signal("token_dropped"):
+			token.token_dropped.connect(_on_token_dropped)
+		# Position at mago's current location
+		var start_pos := get_location_position(mago.current_location)
 		var offset := Vector2((idx - 2) * 18, 0)
 		token.position = start_pos + offset
 		_mago_tokens[mago.mago_name] = token
 		idx += 1
 
 
-func _on_party_moved(destination_id: String) -> void:
-	if _mago_tokens.is_empty():
+func _get_mago_offset(mago_name: String) -> Vector2:
+	var idx := 0
+	for name in _mago_tokens:
+		if name == mago_name:
+			break
+		idx += 1
+	return Vector2((idx - 2) * 18, 0)
+
+
+func _on_token_dropped(mago: MagoStats, world_pos: Vector2) -> void:
+	var token: Node2D = _mago_tokens.get(mago.mago_name)
+	if not token:
 		return
-	var path := find_path(PartyManager.current_location, destination_id)
+
+	var target_id := get_nearest_location(world_pos)
+	if target_id.is_empty() or target_id == mago.current_location:
+		# Snap back
+		var offset := _get_mago_offset(mago.mago_name)
+		token.snap_to(get_location_position(mago.current_location) + offset)
+		return
+
+	var path := find_path(mago.current_location, target_id)
 	if path.is_empty():
+		# No path — snap back
+		var offset := _get_mago_offset(mago.mago_name)
+		token.snap_to(get_location_position(mago.current_location) + offset)
 		return
-	PartyManager.move_to(path)
-	_animate_travel(path)
+
+	# Start travel
+	PartyManager.start_mago_travel(mago, path)
+	_animate_mago_travel(mago.mago_name, path)
 
 
-func _animate_travel(path: Array[String]) -> void:
-	if _mago_tokens.is_empty():
+func _animate_mago_travel(mago_name: String, path: Array[String]) -> void:
+	var token: Node2D = _mago_tokens.get(mago_name)
+	if not token:
 		return
-	var idx := 0
-	for mago_name in _mago_tokens:
-		var token: Node2D = _mago_tokens[mago_name]
-		var tween := create_tween()
-		for loc_id in path:
-			var target := get_location_position(loc_id)
-			var offset := Vector2((idx - 2) * 18, 0)
-			tween.tween_property(token, "position", target + offset, 0.5)
-		idx += 1
+	var offset := _get_mago_offset(mago_name)
+	var tween := create_tween()
+	for loc_id in path:
+		var target := get_location_position(loc_id)
+		tween.tween_property(token, "position", target + offset, 0.5)
 
 
-func _on_party_arrived(location_id: String) -> void:
-	var idx := 0
-	for mago_name in _mago_tokens:
-		var token: Node2D = _mago_tokens[mago_name]
-		var offset := Vector2((idx - 2) * 18, 0)
-		token.position = get_location_position(location_id) + offset
-		idx += 1
+func _on_mago_moved(mago: MagoStats, _from_location_id: String, to_location_id: String) -> void:
+	# Ensure token is at correct position when mago arrives at waypoint
+	var token: Node2D = _mago_tokens.get(mago.mago_name)
+	if token:
+		var offset := _get_mago_offset(mago.mago_name)
+		token.position = get_location_position(to_location_id) + offset
+	# Highlight location markers during drag handled by _process in location_marker
 
 
 func _on_encounter_spawned(enc_def: EncounterDef, location_id: String) -> void:

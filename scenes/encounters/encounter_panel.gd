@@ -49,7 +49,11 @@ func _build_available_list() -> void:
 	for child in available_list.get_children():
 		child.queue_free()
 
-	var available := PartyManager.get_available_magos()
+	var all_available := PartyManager.get_available_magos()
+	var available: Array[MagoStats] = []
+	for m in all_available:
+		if m.current_location == current_encounter.location_id and not m.is_traveling:
+			available.append(m)
 	for mago in available:
 		var btn := Button.new()
 		var skill := mago.get_stat(current_encounter.resolution_stat)

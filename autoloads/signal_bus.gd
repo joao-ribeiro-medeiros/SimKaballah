@@ -25,3 +25,7 @@ signal chronicle_entry_added(entry)
 signal party_moved(destination_location_id: String)
 signal party_arrived(location_id: String)
 signal location_clicked(location_id: String)
+
+# Individual mage movement
+signal mago_moved(mago, from_location_id: String, to_location_id: String)
+signal mago_travel_started(mago, destination_id: String)

@@ -64,6 +64,16 @@ func show_encounter_marker(show_it: bool) -> void:
 			dot.color = Color(1, 0.85, 0.4, 0.9) # restore original
 
 
+func set_highlight(on: bool) -> void:
+	if on:
+		modulate = Color(1.4, 1.3, 0.8)
+	else:
+		if _is_hovered:
+			modulate = Color(1.3, 1.3, 1.3)
+		else:
+			modulate = Color.WHITE
+
+
 func _start_pulse() -> void:
 	if dot == null:
 		return

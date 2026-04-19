@@ -91,8 +91,8 @@ func _add_opening_chronicle() -> void:
 	entry.game_timestamp = 0.0
 	entry.entry_type = ChronicleEntry.EntryType.TRAVEL
 	entry.title = "The Kabbalah Gathers"
-	entry.narrative_text = "The Kabbalah gathers at Copacabana. Five Awakened mages from diverse traditions unite under the Rio sun, drawn together by visions of cosmic imbalance. Their journey begins now."
-	entry.location_id = "copacabana"
+	entry.narrative_text = "The Kabbalah gathers at the Refuge in Lapa. Five Awakened mages from diverse traditions unite under the Rio sun, drawn together by visions of cosmic imbalance. Their journey begins now."
+	entry.location_id = "lapa"
 	Chronicle.add_entry(entry)
 
 
@@ -461,19 +461,16 @@ func _create_initial_encounters() -> Array[EncounterDef]:
 
 
 func _on_location_clicked(location_id: String) -> void:
-	if PartyManager.is_traveling:
-		return
+	# Check if any mage is at this location and not traveling
+	var mago_present := false
+	for mago in PartyManager.magos:
+		if mago.current_location == location_id and not mago.is_traveling:
+			mago_present = true
+			break
 
-	if location_id == PartyManager.current_location:
-		# Check for encounter at current location
-		if EncounterManager.has_encounter_at(location_id):
-			var enc_def: EncounterDef = EncounterManager.get_encounter_at(location_id)
-			encounter_panel.show_encounter(enc_def)
-	else:
-		# Navigate to location
-		var path: Array[String] = rio_map.find_path(PartyManager.current_location, location_id)
-		if not path.is_empty():
-			SignalBus.party_moved.emit(location_id)
+	if mago_present and EncounterManager.has_encounter_at(location_id):
+		var enc_def: EncounterDef = EncounterManager.get_encounter_at(location_id)
+		encounter_panel.show_encounter(enc_def)
 
 
 func _on_encounter_spawned(enc_def: EncounterDef, location_id: String) -> void:

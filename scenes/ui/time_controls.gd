@@ -31,7 +31,7 @@ func _update_display(scale: float) -> void:
 		pause_btn.text = ">"
 		pause_btn.tooltip_text = "Resume"
 	else:
-		speed_label.text = "%gx" % scale
+		speed_label.text = str(scale) + "x"
 		pause_btn.text = "||"
 		pause_btn.tooltip_text = "Pause"
 	halve_btn.disabled = (scale <= 1.0)

@@ -26,6 +26,7 @@ layer = 1
 [node name="PartyPanel" parent="UILayer" instance=ExtResource("4_pp")]
 
 [node name="ChroniclePanel" parent="UILayer" instance=ExtResource("5_cp")]
+unique_name_in_owner = true
 
 [node name="PopupLayer" type="CanvasLayer" parent="."]
 layer = 2

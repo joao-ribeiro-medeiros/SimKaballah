@@ -71,7 +71,6 @@ func _add_entry_widget(entry: ChronicleEntry, prepend: bool = false) -> void:
 	vbox.add_child(body)
 
 	if prepend:
-		entries_container.move_child(panel, 0)
 		entries_container.add_child(panel)
 		entries_container.move_child(panel, 0)
 	else:

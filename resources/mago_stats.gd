@@ -43,6 +43,11 @@ extends Resource
 # Relationships: mago_name -> bond value (-5 to +5)
 @export var relationships: Dictionary = {}
 
+# Location & Travel
+@export var current_location: String = "lapa"
+var travel_path: Array[String] = []
+var is_traveling: bool = false
+
 # Whether this mago is currently deployed to an encounter
 var is_deployed: bool = false
 
