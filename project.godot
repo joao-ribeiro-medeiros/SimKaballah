@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.6")
 
 [autoload]
 
+GameSettings="*res://autoloads/game_settings.gd"
 SignalBus="*res://autoloads/signal_bus.gd"
 GameClock="*res://autoloads/game_clock.gd"
 CosmicBalance="*res://autoloads/cosmic_balance.gd"

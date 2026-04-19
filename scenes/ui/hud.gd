@@ -10,6 +10,7 @@ extends PanelContainer
 @onready var destruction_pct: Label = %DestructionPct
 @onready var conservation_pct: Label = %ConservationPct
 @onready var alert_label: Label = %AlertLabel
+@onready var difficulty_button: Button = %DifficultyButton
 
 
 func _ready() -> void:
@@ -18,6 +19,8 @@ func _ready() -> void:
 	SignalBus.party_arrived.connect(_on_party_arrived)
 	SignalBus.encounter_spawned.connect(_on_encounter_spawned)
 	alert_label.text = ""
+	difficulty_button.text = GameSettings.get_difficulty_name()
+	difficulty_button.pressed.connect(_on_difficulty_pressed)
 
 
 func _on_time_tick(_delta: float) -> void:
@@ -51,6 +54,17 @@ func _on_party_arrived(location_id: String) -> void:
 func _on_encounter_spawned(_enc_def, location_id: String) -> void:
 	if location_id == PartyManager.current_location:
 		_flash_alert("Encounter at %s!" % location_id.capitalize())
+
+
+func _on_difficulty_pressed() -> void:
+	match GameSettings.difficulty:
+		GameSettings.Difficulty.EASY:
+			GameSettings.set_difficulty(GameSettings.Difficulty.NORMAL)
+		GameSettings.Difficulty.NORMAL:
+			GameSettings.set_difficulty(GameSettings.Difficulty.HARD)
+		GameSettings.Difficulty.HARD:
+			GameSettings.set_difficulty(GameSettings.Difficulty.EASY)
+	difficulty_button.text = GameSettings.get_difficulty_name()
 
 
 func _flash_alert(text: String) -> void:

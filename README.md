@@ -1,5 +1,7 @@
 # SimKaballah
 
+![SimKaballah](readmepic.png)
+
 A strategy simulation game built in **Godot 4.6**, inspired by *Mage: The Ascension*. Guide a cabal (Kabbalah) of five Awakened mages through the streets of Rio de Janeiro, resolving supernatural encounters, managing cosmic balance, and pursuing the ultimate goal: Ascension.
 
 ## Premise
@@ -23,12 +25,11 @@ Rio de Janeiro pulses with unseen magical energy. Reality fractures at Copacaban
 - System ticks every 5 game-minutes trigger encounter spawns and cosmic drift
 
 ### Encounters
-- 20 unique encounters across all locations (Story, Random, Cosmic types)
+- 25+ unique encounters across all locations (Story, Random, Combat, Find Node, Cosmic Balance, Find Mago types)
 - Encounters appear as pulsing red indicators on locations
-- Click your current location when an encounter is active to engage
+- Move a mage to an encounter location to engage
 - Deploy up to 3 mages per encounter
-- **Drag-and-drop** mages from the party roster onto deployment slots, or click to assign
-- Resolution uses the best mage's relevant sphere/attribute vs. difficulty
+- Resolution tests **attributes** (Strength, Dexterity, Stamina, Charisma, Manipulation, Appearance, Intelligence, Wits, Perception) vs. difficulty
 - Relationship bonds between co-deployed mages grant skill bonuses
 - Some encounters offer **dilemma choices** with different stats, difficulties, and cosmic impacts
 
@@ -91,7 +92,8 @@ map_images/         # Satellite map of Rio de Janeiro
 
 ## Controls
 
-- **Left-click** location: Travel or engage encounter
+- **Left-click** mage token: Select mage
+- **Left-click** location (with mage selected): Move mage there
 - **Scroll wheel**: Zoom map
 - **Middle/Right-click drag**: Pan map
 - **Esc**: Toggle pause

@@ -36,15 +36,17 @@ static func find_best_resolver(magos: Array, stat_name: String) -> Array:
 	var best_mago = null
 	var best_skill := 0
 
+	var difficulty_bonus: int = GameSettings.get_difficulty_bonus()
+
 	for mago in magos:
 		var base_skill: int = mago.get_stat(stat_name)
 		var bonus := _relationship_bonus(mago, magos)
-		var effective := base_skill + bonus
+		var effective := base_skill + bonus + difficulty_bonus
 		if effective > best_skill:
 			best_skill = effective
 			best_mago = mago
 
-	return [best_mago, best_skill]
+	return [best_mago, maxi(best_skill, 0)]
 
 
 ## +1 bonus if any co-deployed mago has bond >= +3
