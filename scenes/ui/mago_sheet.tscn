@@ -1,0 +1,147 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/mago_sheet.gd" id="1_ms"]
+
+[node name="MagoSheet" type="PopupPanel"]
+title = "Character Sheet"
+initial_position = 2
+size = Vector2i(500, 700)
+script = ExtResource("1_ms")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MagoName" type="Label" parent="Scroll/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Mago Name"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+
+[node name="TraditionLabel" type="Label" parent="Scroll/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Tradition"
+horizontal_alignment = 1
+modulate = Color(0.7, 0.7, 0.9, 1)
+
+[node name="Sep1" type="HSeparator" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="Scroll/VBox"]
+layout_mode = 2
+columns = 2
+
+[node name="AreteLabel" type="Label" parent="Scroll/VBox/StatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Arete: 1 / 10"
+
+[node name="XPLabel" type="Label" parent="Scroll/VBox/StatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "XP: 0"
+
+[node name="HealthLabel" type="Label" parent="Scroll/VBox/StatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Health: Ready"
+
+[node name="StaminaLabel" type="Label" parent="Scroll/VBox/StatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Stamina: Ready"
+
+[node name="ParadoxLabel" type="Label" parent="Scroll/VBox/StatsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Paradox: None"
+
+[node name="Sep2" type="HSeparator" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="AttrTitle" type="Label" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Attributes"
+theme_override_font_sizes/font_size = 16
+
+[node name="AttrGrid" type="GridContainer" parent="Scroll/VBox"]
+layout_mode = 2
+columns = 3
+
+[node name="StrengthLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Str: 1"
+
+[node name="DexterityLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Dex: 1"
+
+[node name="StaminaAttrLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Sta: 1"
+
+[node name="CharismaLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cha: 1"
+
+[node name="ManipulationLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Man: 1"
+
+[node name="AppearanceLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "App: 1"
+
+[node name="IntelligenceLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Int: 1"
+
+[node name="WitsLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wits: 1"
+
+[node name="PerceptionLabel" type="Label" parent="Scroll/VBox/AttrGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Per: 1"
+
+[node name="Sep3" type="HSeparator" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="SpheresTitle" type="Label" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Nine Spheres"
+theme_override_font_sizes/font_size = 16
+
+[node name="SpheresContainer" type="VBoxContainer" parent="Scroll/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Sep4" type="HSeparator" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="AdvanceAreteBtn" type="Button" parent="Scroll/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Advance Arete (100 XP)"

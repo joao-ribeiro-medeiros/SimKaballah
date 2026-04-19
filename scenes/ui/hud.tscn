@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/time_controls.tscn" id="2_tc"]
+
+[node name="HUD" type="PanelContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+script = ExtResource("1_hud")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TimeControls" parent="HBox" instance=ExtResource("2_tc")]
+layout_mode = 2
+
+[node name="Sep1" type="VSeparator" parent="HBox"]
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Day 1, 00:00 [1x]"
+custom_minimum_size = Vector2(180, 0)
+
+[node name="Sep2" type="VSeparator" parent="HBox"]
+layout_mode = 2
+
+[node name="LocationLabel" type="Label" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Copacabana"
+custom_minimum_size = Vector2(150, 0)
+
+[node name="Sep3" type="VSeparator" parent="HBox"]
+layout_mode = 2
+
+[node name="CosmicMinibar" type="HBoxContainer" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(200, 0)
+
+[node name="CreationBar" type="ProgressBar" parent="HBox/CosmicMinibar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 33.3
+show_percentage = false
+modulate = Color(0.3, 0.9, 0.3, 1)
+
+[node name="DestructionBar" type="ProgressBar" parent="HBox/CosmicMinibar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 33.3
+show_percentage = false
+modulate = Color(0.9, 0.3, 0.3, 1)
+
+[node name="ConservationBar" type="ProgressBar" parent="HBox/CosmicMinibar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 33.4
+show_percentage = false
+modulate = Color(0.3, 0.5, 0.9, 1)
+
+[node name="Spacer" type="Control" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AlertLabel" type="Label" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(200, 0)
+horizontal_alignment = 2

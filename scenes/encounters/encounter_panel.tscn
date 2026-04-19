@@ -1,0 +1,116 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/encounters/encounter_panel.gd" id="1_ep"]
+
+[node name="EncounterPanel" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -250.0
+offset_right = 300.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ep")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="EncounterTitle" type="Label" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Encounter Title"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="Sep1" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="EncounterDescription" type="RichTextLabel" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+custom_minimum_size = Vector2(0, 60)
+scroll_active = false
+
+[node name="InfoHBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="VBox/InfoHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Difficulty: 3"
+modulate = Color(1, 0.6, 0.3, 1)
+
+[node name="Spacer" type="Control" parent="VBox/InfoHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatLabel" type="Label" parent="VBox/InfoHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Requires: Forces"
+modulate = Color(0.6, 0.8, 1, 1)
+
+[node name="Sep2" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="DeployTitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Deploy Magos:"
+theme_override_font_sizes/font_size = 14
+
+[node name="DeploymentSlots" type="HBoxContainer" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="AvailableTitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Available:"
+theme_override_font_sizes/font_size = 12
+
+[node name="AvailableScroll" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 100)
+
+[node name="AvailableList" type="VBoxContainer" parent="VBox/AvailableScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DilemmaContainer" type="VBoxContainer" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+visible = false
+
+[node name="Sep3" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="ProbabilityLabel" type="Label" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Deploy Magos to see chances"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="ButtonHBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="EngageBtn" type="Button" parent="VBox/ButtonHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(120, 35)
+text = "Engage"
+disabled = true
+
+[node name="WithdrawBtn" type="Button" parent="VBox/ButtonHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(120, 35)
+text = "Withdraw"

@@ -1,0 +1,8 @@
+# Godot editor cache
+.godot/
+
+# macOS
+.DS_Store
+
+# Langfuse local data
+.langfuse/

@@ -1,0 +1,41 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scenes/main/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/map/rio_map.tscn" id="2_map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/party_panel.tscn" id="4_pp"]
+[ext_resource type="PackedScene" path="res://scenes/ui/chronicle_panel.tscn" id="5_cp"]
+[ext_resource type="PackedScene" path="res://scenes/ui/mago_sheet.tscn" id="6_ms"]
+[ext_resource type="PackedScene" path="res://scenes/encounters/encounter_panel.tscn" id="7_ep"]
+[ext_resource type="PackedScene" path="res://scenes/ui/cosmic_panel.tscn" id="8_cosmic"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="MapLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="RioMap" parent="MapLayer" instance=ExtResource("2_map")]
+unique_name_in_owner = true
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="HUD" parent="UILayer" instance=ExtResource("3_hud")]
+
+[node name="PartyPanel" parent="UILayer" instance=ExtResource("4_pp")]
+
+[node name="ChroniclePanel" parent="UILayer" instance=ExtResource("5_cp")]
+
+[node name="PopupLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="MagoSheet" parent="PopupLayer" instance=ExtResource("6_ms")]
+unique_name_in_owner = true
+
+[node name="EncounterPanel" parent="PopupLayer" instance=ExtResource("7_ep")]
+unique_name_in_owner = true
+
+[node name="CosmicPanel" parent="PopupLayer" instance=ExtResource("8_cosmic")]
+unique_name_in_owner = true
+visible = false

@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/map/rio_map.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/map/location_marker.tscn" id="2_marker"]
+[ext_resource type="Script" path="res://scenes/map/map_camera.gd" id="3_camera"]
+[ext_resource type="Texture2D" path="res://map_images/base_map.png" id="4_basemap"]
+
+[node name="RioMap" type="Node2D"]
+script = ExtResource("1_map")
+
+[node name="BaseMap" type="Sprite2D" parent="."]
+texture = ExtResource("4_basemap")
+centered = false
+
+[node name="AtmosphereOverlay" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.15)
+z_index = 1
+
+[node name="Locations" type="Node2D" parent="."]
+z_index = 2
+
+[node name="Copacabana" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2165, 593)
+location_id = "copacabana"
+location_name = "Copacabana"
+connected_locations = Array[String](["botafogo", "ipanema", "lapa"])
+
+[node name="Ipanema" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(1995, 623)
+location_id = "ipanema"
+location_name = "Ipanema"
+connected_locations = Array[String](["copacabana", "botafogo"])
+
+[node name="Botafogo" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2123, 532)
+location_id = "botafogo"
+location_name = "Botafogo"
+connected_locations = Array[String](["copacabana", "ipanema", "pao_de_acucar", "centro"])
+
+[node name="PaoDeAcucar" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2208, 494)
+location_id = "pao_de_acucar"
+location_name = "Pao de Acucar"
+connected_locations = Array[String](["botafogo"])
+
+[node name="Centro" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2293, 380)
+location_id = "centro"
+location_name = "Centro"
+connected_locations = Array[String](["botafogo", "lapa", "santa_teresa"])
+
+[node name="Lapa" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2208, 456)
+location_id = "lapa"
+location_name = "Lapa"
+connected_locations = Array[String](["copacabana", "centro", "santa_teresa"])
+
+[node name="SantaTeresa" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2123, 418)
+location_id = "santa_teresa"
+location_name = "Santa Teresa"
+connected_locations = Array[String](["centro", "lapa", "tijuca"])
+
+[node name="Tijuca" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(1953, 342)
+location_id = "tijuca"
+location_name = "Tijuca"
+connected_locations = Array[String](["santa_teresa", "corcovado"])
+
+[node name="Corcovado" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(2080, 380)
+location_id = "corcovado"
+location_name = "Corcovado"
+connected_locations = Array[String](["tijuca", "santa_teresa"])
+
+[node name="Rocinha" parent="Locations" instance=ExtResource("2_marker")]
+position = Vector2(1995, 494)
+location_id = "rocinha"
+location_name = "Rocinha"
+connected_locations = Array[String](["ipanema", "tijuca"])
+
+[node name="EncounterMarkers" type="Node2D" parent="."]
+z_index = 3
+
+[node name="PartyTokens" type="Node2D" parent="."]
+z_index = 4
+
+[node name="MapCamera" type="Camera2D" parent="."]
+position = Vector2(1341, 542)
+zoom = Vector2(0.8, 0.8)
+limit_left = 0
+limit_top = 0
+limit_right = 2682
+limit_bottom = 1084
+script = ExtResource("3_camera")

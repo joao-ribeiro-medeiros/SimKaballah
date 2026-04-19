@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/time_controls.gd" id="1_tc"]
+
+[node name="TimeControls" type="HBoxContainer"]
+script = ExtResource("1_tc")
+
+[node name="PauseBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 30)
+text = "||"
+tooltip_text = "Pause"
+
+[node name="PlayBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 30)
+text = ">"
+tooltip_text = "Normal Speed"
+
+[node name="FastBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 30)
+text = ">>"
+tooltip_text = "2x Speed"
+
+[node name="FasterBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 30)
+text = ">>>"
+tooltip_text = "4x Speed"
+
+[node name="FastestBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 30)
+text = ">>>>"
+tooltip_text = "8x Speed"
