@@ -2,7 +2,7 @@ extends Node2D
 
 # Location graph: location_id -> {name, position, connections}
 var locations: Dictionary = {}
-var _party_token: Node2D = null
+var _mago_tokens: Dictionary = {} # mago_name -> Node2D
 
 @onready var locations_node: Node2D = $Locations
 @onready var encounter_markers_node: Node2D = $EncounterMarkers
@@ -11,11 +11,32 @@ var _party_token: Node2D = null
 
 func _ready() -> void:
 	_build_location_graph()
+	queue_redraw()
 	SignalBus.encounter_spawned.connect(_on_encounter_spawned)
 	SignalBus.encounter_resolved.connect(_on_encounter_resolved)
 	SignalBus.party_moved.connect(_on_party_moved)
 	SignalBus.party_arrived.connect(_on_party_arrived)
-	_spawn_party_token()
+	_spawn_mago_tokens()
+
+
+func _draw() -> void:
+	# Draw semi-transparent gold lines between connected locations
+	var drawn_pairs: Dictionary = {}
+	for loc_id in locations:
+		var loc: Dictionary = locations[loc_id]
+		for neighbor_id in loc.get("connections", []):
+			var pair_key: String
+			if loc_id < neighbor_id:
+				pair_key = loc_id + "|" + neighbor_id
+			else:
+				pair_key = neighbor_id + "|" + loc_id
+			if pair_key in drawn_pairs:
+				continue
+			drawn_pairs[pair_key] = true
+			if neighbor_id in locations:
+				var from_pos: Vector2 = loc.position
+				var to_pos: Vector2 = locations[neighbor_id].position
+				draw_line(from_pos, to_pos, Color(1, 0.85, 0.4, 0.35), 2.0, true)
 
 
 func _build_location_graph() -> void:
@@ -63,16 +84,24 @@ func get_location_position(location_id: String) -> Vector2:
 	return Vector2.ZERO
 
 
-func _spawn_party_token() -> void:
+func _spawn_mago_tokens() -> void:
 	var token_scene := preload("res://scenes/map/mago_token.tscn")
-	_party_token = token_scene.instantiate()
-	party_tokens_node.add_child(_party_token)
 	var start_pos := get_location_position(PartyManager.current_location)
-	_party_token.global_position = start_pos
+	var idx := 0
+	for mago in PartyManager.magos:
+		var token: Node2D = token_scene.instantiate()
+		party_tokens_node.add_child(token)
+		if token.has_method("setup"):
+			token.setup(mago)
+		# Offset tokens so they don't overlap
+		var offset := Vector2((idx - 2) * 18, 0)
+		token.position = start_pos + offset
+		_mago_tokens[mago.mago_name] = token
+		idx += 1
 
 
 func _on_party_moved(destination_id: String) -> void:
-	if _party_token == null:
+	if _mago_tokens.is_empty():
 		return
 	var path := find_path(PartyManager.current_location, destination_id)
 	if path.is_empty():
@@ -82,17 +111,26 @@ func _on_party_moved(destination_id: String) -> void:
 
 
 func _animate_travel(path: Array[String]) -> void:
-	if _party_token == null:
+	if _mago_tokens.is_empty():
 		return
-	var tween := create_tween()
-	for loc_id in path:
-		var target := get_location_position(loc_id)
-		tween.tween_property(_party_token, "global_position", target, 0.5)
+	var idx := 0
+	for mago_name in _mago_tokens:
+		var token: Node2D = _mago_tokens[mago_name]
+		var tween := create_tween()
+		for loc_id in path:
+			var target := get_location_position(loc_id)
+			var offset := Vector2((idx - 2) * 18, 0)
+			tween.tween_property(token, "position", target + offset, 0.5)
+		idx += 1
 
 
 func _on_party_arrived(location_id: String) -> void:
-	if _party_token:
-		_party_token.global_position = get_location_position(location_id)
+	var idx := 0
+	for mago_name in _mago_tokens:
+		var token: Node2D = _mago_tokens[mago_name]
+		var offset := Vector2((idx - 2) * 18, 0)
+		token.position = get_location_position(location_id) + offset
+		idx += 1
 
 
 func _on_encounter_spawned(enc_def: EncounterDef, location_id: String) -> void:

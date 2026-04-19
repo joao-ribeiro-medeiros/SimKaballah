@@ -2,7 +2,13 @@ extends PanelContainer
 
 @onready var roster_container: VBoxContainer = %RosterContainer
 
-var _roster_entry_scene: PackedScene = null
+const TRADITION_COLORS := {
+	"Order of Hermes": Color(0.8, 0.15, 0.15),
+	"Akashic Brotherhood": Color(0.2, 0.4, 0.9),
+	"Verbena": Color(0.15, 0.7, 0.2),
+	"Virtual Adepts": Color(0.1, 0.8, 0.8),
+	"Dreamspeakers": Color(0.6, 0.2, 0.8),
+}
 
 
 func _ready() -> void:
@@ -19,19 +25,42 @@ func _build_roster() -> void:
 		roster_container.add_child(entry)
 
 
-func _create_roster_entry(mago: MagoStats) -> PanelContainer:
+func _get_tradition_color(tradition: String) -> Color:
+	return TRADITION_COLORS.get(tradition, Color(0.5, 0.5, 0.5))
+
+
+func _create_roster_entry(mago: MagoStats) -> Control:
+	# Use MagoRosterEntry script (extends PanelContainer with drag support)
+	var drag_script := preload("res://scenes/ui/mago_roster_entry.gd")
 	var panel := PanelContainer.new()
+	panel.set_script(drag_script)
 	panel.custom_minimum_size = Vector2(200, 60)
+	panel.setup(mago)
 
 	var hbox := HBoxContainer.new()
 	panel.add_child(hbox)
 
-	# Portrait placeholder
-	var portrait := TextureRect.new()
-	portrait.custom_minimum_size = Vector2(48, 48)
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.name = "Portrait"
-	hbox.add_child(portrait)
+	# Colored circle portrait with initial letter
+	var portrait_panel := PanelContainer.new()
+	portrait_panel.custom_minimum_size = Vector2(48, 48)
+	portrait_panel.name = "Portrait"
+	var style := StyleBoxFlat.new()
+	style.bg_color = _get_tradition_color(mago.tradition)
+	style.corner_radius_top_left = 24
+	style.corner_radius_top_right = 24
+	style.corner_radius_bottom_left = 24
+	style.corner_radius_bottom_right = 24
+	portrait_panel.add_theme_stylebox_override("panel", style)
+
+	var initial_label := Label.new()
+	initial_label.text = mago.mago_name[0]
+	initial_label.add_theme_font_size_override("font_size", 24)
+	initial_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	initial_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	initial_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	initial_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	portrait_panel.add_child(initial_label)
+	hbox.add_child(portrait_panel)
 
 	var vbox := VBoxContainer.new()
 	hbox.add_child(vbox)

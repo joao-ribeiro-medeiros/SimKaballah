@@ -1,6 +1,7 @@
 extends Node
 
 var entries: Array[ChronicleEntry] = []
+var _was_in_crisis: bool = false
 
 
 func _ready() -> void:
@@ -77,8 +78,33 @@ func _on_mago_stat_changed(mago: MagoStats, stat_name: String, old_val, new_val)
 
 
 func _on_cosmic_shift(creation: float, destruction: float, conservation: float) -> void:
-	# Only log when crisis state changes
-	pass
+	var in_crisis := CosmicBalance.is_in_crisis()
+	if in_crisis and not _was_in_crisis:
+		# Crisis just started
+		var dominant := CosmicBalance.get_dominant()
+		var tendency_name: String
+		match dominant:
+			Enums.CosmicTendency.CREATION:
+				tendency_name = "Creation"
+			Enums.CosmicTendency.DESTRUCTION:
+				tendency_name = "Destruction"
+			_:
+				tendency_name = "Conservation"
+		var entry := ChronicleEntry.new()
+		entry.game_timestamp = GameClock.elapsed_game_minutes
+		entry.entry_type = ChronicleEntry.EntryType.CRISIS
+		entry.title = "Cosmic Crisis"
+		entry.narrative_text = "The cosmic balance has tipped dangerously toward %s. The fabric of reality strains under the imbalance." % tendency_name
+		add_entry(entry)
+	elif not in_crisis and _was_in_crisis:
+		# Crisis just ended
+		var entry := ChronicleEntry.new()
+		entry.game_timestamp = GameClock.elapsed_game_minutes
+		entry.entry_type = ChronicleEntry.EntryType.CRISIS
+		entry.title = "Balance Restored"
+		entry.narrative_text = "The cosmic balance has been restored. Reality breathes easier once more."
+		add_entry(entry)
+	_was_in_crisis = in_crisis
 
 
 func _on_mago_ascended(mago: MagoStats) -> void:

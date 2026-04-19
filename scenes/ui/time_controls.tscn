@@ -10,22 +10,18 @@ custom_minimum_size = Vector2(40, 30)
 text = "||"
 tooltip_text = "Pause"
 
-[node name="PlayBtn" type="Button" parent="."]
+[node name="HalveBtn" type="Button" parent="."]
 custom_minimum_size = Vector2(40, 30)
-text = ">"
-tooltip_text = "Normal Speed"
+text = "<<"
+tooltip_text = "Halve Speed"
 
-[node name="FastBtn" type="Button" parent="."]
-custom_minimum_size = Vector2(40, 30)
-text = ">>"
-tooltip_text = "2x Speed"
+[node name="SpeedLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(50, 0)
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "1x"
 
-[node name="FasterBtn" type="Button" parent="."]
-custom_minimum_size = Vector2(40, 30)
-text = ">>>"
-tooltip_text = "4x Speed"
-
-[node name="FastestBtn" type="Button" parent="."]
-custom_minimum_size = Vector2(40, 30)
-text = ">>>>"
-tooltip_text = "8x Speed"
+[node name="DobrarBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(80, 30)
+text = "DOBRAR >>"
+tooltip_text = "Double Speed"

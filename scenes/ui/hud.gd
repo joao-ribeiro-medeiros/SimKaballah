@@ -2,10 +2,13 @@ extends PanelContainer
 
 @onready var time_label: Label = %TimeLabel
 @onready var location_label: Label = %LocationLabel
-@onready var cosmic_minibar: HBoxContainer = %CosmicMinibar
+@onready var cosmic_container: VBoxContainer = %CosmicContainer
 @onready var creation_bar: ProgressBar = %CreationBar
 @onready var destruction_bar: ProgressBar = %DestructionBar
 @onready var conservation_bar: ProgressBar = %ConservationBar
+@onready var creation_pct: Label = %CreationPct
+@onready var destruction_pct: Label = %DestructionPct
+@onready var conservation_pct: Label = %ConservationPct
 @onready var alert_label: Label = %AlertLabel
 
 
@@ -18,21 +21,21 @@ func _ready() -> void:
 
 
 func _on_time_tick(_delta: float) -> void:
-	time_label.text = GameClock.get_time_string()
-	var scale_text := ""
-	match int(GameClock.time_scale):
-		0: scale_text = "PAUSED"
-		1: scale_text = "1x"
-		2: scale_text = "2x"
-		4: scale_text = "4x"
-		8: scale_text = "8x"
-	time_label.text += " [%s]" % scale_text
+	var scale_text: String
+	if GameClock.time_scale == 0.0:
+		scale_text = "PAUSED"
+	else:
+		scale_text = "%gx" % GameClock.time_scale
+	time_label.text = "%s [%s]" % [GameClock.get_time_string(), scale_text]
 
 
 func _on_cosmic_shift(creation: float, destruction: float, conservation: float) -> void:
 	creation_bar.value = creation * 100
 	destruction_bar.value = destruction * 100
 	conservation_bar.value = conservation * 100
+	creation_pct.text = "%d%%" % int(creation * 100)
+	destruction_pct.text = "%d%%" % int(destruction * 100)
+	conservation_pct.text = "%d%%" % int(conservation * 100)
 
 	if CosmicBalance.is_in_crisis():
 		alert_label.text = "COSMIC CRISIS!"

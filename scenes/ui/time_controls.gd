@@ -1,39 +1,41 @@
 extends HBoxContainer
 
 @onready var pause_btn: Button = $PauseBtn
-@onready var play_btn: Button = $PlayBtn
-@onready var fast_btn: Button = $FastBtn
-@onready var faster_btn: Button = $FasterBtn
-@onready var fastest_btn: Button = $FastestBtn
+@onready var halve_btn: Button = $HalveBtn
+@onready var speed_label: Label = $SpeedLabel
+@onready var dobrar_btn: Button = $DobrarBtn
 
 
 func _ready() -> void:
-	pause_btn.pressed.connect(func(): GameClock.set_time_scale(0.0))
-	play_btn.pressed.connect(func(): GameClock.set_time_scale(1.0))
-	fast_btn.pressed.connect(func(): GameClock.set_time_scale(2.0))
-	faster_btn.pressed.connect(func(): GameClock.set_time_scale(4.0))
-	fastest_btn.pressed.connect(func(): GameClock.set_time_scale(8.0))
+	pause_btn.pressed.connect(func(): GameClock.toggle_pause())
+	halve_btn.pressed.connect(func(): GameClock.halve())
+	dobrar_btn.pressed.connect(func(): GameClock.dobrar())
 
 	SignalBus.time_scale_changed.connect(_on_time_scale_changed)
 	SignalBus.game_paused.connect(_on_game_paused)
-	_update_buttons(1.0)
+	_update_display(1.0)
 
 
 func _on_time_scale_changed(new_scale: float) -> void:
-	_update_buttons(new_scale)
+	_update_display(new_scale)
 
 
 func _on_game_paused(is_paused: bool) -> void:
 	if is_paused:
-		_update_buttons(0.0)
+		_update_display(0.0)
 
 
-func _update_buttons(scale: float) -> void:
-	pause_btn.disabled = (scale == 0.0)
-	play_btn.disabled = (scale == 1.0)
-	fast_btn.disabled = (scale == 2.0)
-	faster_btn.disabled = (scale == 4.0)
-	fastest_btn.disabled = (scale == 8.0)
+func _update_display(scale: float) -> void:
+	if scale == 0.0:
+		speed_label.text = "PAUSED"
+		pause_btn.text = ">"
+		pause_btn.tooltip_text = "Resume"
+	else:
+		speed_label.text = "%gx" % scale
+		pause_btn.text = "||"
+		pause_btn.tooltip_text = "Pause"
+	halve_btn.disabled = (scale <= 1.0)
+	dobrar_btn.disabled = (scale >= GameClock.MAX_TIME_SCALE)
 
 
 func _unhandled_input(event: InputEvent) -> void:

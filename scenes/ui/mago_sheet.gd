@@ -2,6 +2,16 @@ extends PopupPanel
 
 var current_mago: MagoStats = null
 
+const SPHERE_RANK_NAMES := ["Uninitiated", "Initiate", "Apprentice", "Disciple", "Adept", "Master"]
+const RANK_COLORS := [
+	Color(0.5, 0.5, 0.5),  # Uninitiated - gray
+	Color(0.7, 0.7, 0.7),  # Initiate - light gray
+	Color(0.3, 0.8, 0.3),  # Apprentice - green
+	Color(0.3, 0.6, 1.0),  # Disciple - blue
+	Color(0.9, 0.7, 0.1),  # Adept - gold
+	Color(1.0, 0.3, 0.8),  # Master - magenta
+]
+
 @onready var name_label: Label = %MagoName
 @onready var tradition_label: Label = %TraditionLabel
 @onready var arete_label: Label = %AreteLabel
@@ -74,6 +84,12 @@ func _refresh() -> void:
 		advance_arete_btn.disabled = m.experience < cost or m.arete >= 10
 
 
+func _get_sphere_display_name(sphere_name: String) -> String:
+	if sphere_name == "time_sphere":
+		return "Time"
+	return sphere_name.replace("_", " ").capitalize()
+
+
 func _refresh_spheres() -> void:
 	if spheres_container == null:
 		return
@@ -83,17 +99,24 @@ func _refresh_spheres() -> void:
 	var m := current_mago
 	for sphere_name in m.get_all_sphere_names():
 		var hbox := HBoxContainer.new()
+		var val := m.get_sphere(sphere_name)
+		var display_name := _get_sphere_display_name(sphere_name)
+		var rank_name := SPHERE_RANK_NAMES[val]
+		var rank_color := RANK_COLORS[val]
 
-		var display_name := sphere_name.replace("_", " ").capitalize()
 		var label := Label.new()
-		label.text = "%s: %d" % [display_name, m.get_sphere(sphere_name)]
-		label.custom_minimum_size.x = 180
+		label.text = display_name
+		label.custom_minimum_size.x = 120
+		label.add_theme_font_size_override("font_size", 14)
+		label.modulate = rank_color
 		hbox.add_child(label)
 
-		var dots := Label.new()
-		var val := m.get_sphere(sphere_name)
-		dots.text = "●".repeat(val) + "○".repeat(5 - val)
-		hbox.add_child(dots)
+		var diamonds := Label.new()
+		diamonds.text = "◆".repeat(val) + "◇".repeat(5 - val) + " " + rank_name
+		diamonds.add_theme_font_size_override("font_size", 13)
+		diamonds.modulate = rank_color
+		diamonds.custom_minimum_size.x = 180
+		hbox.add_child(diamonds)
 
 		var advance_btn := Button.new()
 		var cost := m.sphere_advance_cost(sphere_name)

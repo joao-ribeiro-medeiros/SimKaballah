@@ -1,7 +1,8 @@
 extends Node
 
-const BASE_GAME_SPEED := 60.0 # 1 real second = 1 game minute at 1x
+const BASE_GAME_SPEED := 180.0 # 1 real second = 3 game minutes at 1x
 const TICK_INTERVAL_MINUTES := 5.0 # system tick every 5 game minutes
+const MAX_TIME_SCALE := 128.0
 
 var time_scale: float = 1.0
 var elapsed_game_minutes: float = 0.0
@@ -21,10 +22,7 @@ func _process(delta: float) -> void:
 	if game_delta <= 0.0:
 		return
 
-	elapsed_game_minutes += game_delta / 60.0 # convert seconds to minutes
-	# Actually game_delta is already in game-seconds, so:
-	# elapsed tracks minutes
-	elapsed_game_minutes = elapsed_game_minutes
+	elapsed_game_minutes += game_delta / 60.0
 
 	SignalBus.time_tick.emit(game_delta)
 
@@ -46,6 +44,19 @@ func set_time_scale(new_scale: float) -> void:
 	elif _is_paused:
 		unpause_game()
 	SignalBus.time_scale_changed.emit(new_scale)
+
+
+func dobrar() -> void:
+	if _is_paused:
+		unpause_game()
+		return
+	var new_scale := minf(time_scale * 2.0, MAX_TIME_SCALE)
+	set_time_scale(new_scale)
+
+
+func halve() -> void:
+	var new_scale := maxf(time_scale / 2.0, 1.0)
+	set_time_scale(new_scale)
 
 
 func pause_game() -> void:

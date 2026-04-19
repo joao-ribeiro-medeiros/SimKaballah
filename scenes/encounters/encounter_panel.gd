@@ -16,6 +16,7 @@ var assigned_magos: Array[MagoStats] = []
 var selected_dilemma: int = -1
 
 const MAX_DEPLOY := 3
+var _deployment_slot_script := preload("res://scenes/encounters/deployment_slot.gd")
 
 
 func _ready() -> void:
@@ -65,6 +66,8 @@ func _build_deployment_slots() -> void:
 	for i in range(MAX_DEPLOY):
 		var slot := PanelContainer.new()
 		slot.custom_minimum_size = Vector2(120, 60)
+		slot.set_script(_deployment_slot_script)
+		slot.mago_dropped.connect(func(mago: MagoStats): _assign_mago(mago))
 
 		var label := Label.new()
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -72,12 +75,13 @@ func _build_deployment_slots() -> void:
 		if i < assigned_magos.size():
 			label.text = assigned_magos[i].mago_name
 			# Click to unassign
+			var idx := i
 			slot.gui_input.connect(func(event: InputEvent):
-				if event is InputEventMouseButton and event.pressed:
-					_unassign_mago(i)
+				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+					_unassign_mago(idx)
 			)
 		else:
-			label.text = "[Empty]"
+			label.text = "[Drop Mago Here]"
 			label.modulate = Color(0.5, 0.5, 0.5)
 
 		slot.add_child(label)

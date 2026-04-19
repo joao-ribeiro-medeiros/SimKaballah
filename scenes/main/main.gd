@@ -14,6 +14,7 @@ func _ready() -> void:
 
 	_init_starting_party()
 	_load_encounter_catalog()
+	_add_opening_chronicle()
 
 
 func _init_starting_party() -> void:
@@ -83,6 +84,16 @@ func _create_starting_magos() -> Array[MagoStats]:
 	magos.append(m5)
 
 	return magos
+
+
+func _add_opening_chronicle() -> void:
+	var entry := ChronicleEntry.new()
+	entry.game_timestamp = 0.0
+	entry.entry_type = ChronicleEntry.EntryType.TRAVEL
+	entry.title = "The Kabbalah Gathers"
+	entry.narrative_text = "The Kabbalah gathers at Copacabana. Five Awakened mages from diverse traditions unite under the Rio sun, drawn together by visions of cosmic imbalance. Their journey begins now."
+	entry.location_id = "copacabana"
+	Chronicle.add_entry(entry)
 
 
 func _load_encounter_catalog() -> void:
