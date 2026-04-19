@@ -5,45 +5,15 @@ const MAX_PARTY_SIZE := 7
 var magos: Array[MagoStats] = []
 var formation: Array[String] = [] # ordered by position: 0-2 front, 3-6 back
 var current_location: String = "lapa" # refuge fallback reference
-var travel_time_per_leg: float = 30.0 # game minutes per leg
-
-# Per-mago travel progress tracking
-var _mago_travel_progress: Dictionary = {} # mago_name -> float
 
 
 func _ready() -> void:
-	SignalBus.time_tick.connect(_on_time_tick)
+	pass
 
 
-func _on_time_tick(delta_game_seconds: float) -> void:
-	for mago in magos:
-		if not mago.is_traveling or mago.travel_path.is_empty():
-			continue
-
-		var progress: float = _mago_travel_progress.get(mago.mago_name, 0.0)
-		progress += delta_game_seconds / 60.0 # convert to minutes
-		if progress >= travel_time_per_leg:
-			progress = 0.0
-			var from_loc := mago.current_location
-			mago.current_location = mago.travel_path[0]
-			mago.travel_path.remove_at(0)
-			SignalBus.mago_moved.emit(mago, from_loc, mago.current_location)
-			if mago.travel_path.is_empty():
-				mago.is_traveling = false
-				_mago_travel_progress.erase(mago.mago_name)
-			else:
-				_mago_travel_progress[mago.mago_name] = progress
-		else:
-			_mago_travel_progress[mago.mago_name] = progress
-
-
-func start_mago_travel(mago: MagoStats, path: Array[String]) -> void:
-	if path.is_empty():
-		return
-	mago.travel_path = path
-	mago.is_traveling = true
-	_mago_travel_progress[mago.mago_name] = 0.0
-	SignalBus.mago_travel_started.emit(mago, path[-1])
+func move_mago_to(mago: MagoStats, destination: String) -> void:
+	mago.current_location = destination
+	mago.is_traveling = false
 
 
 func add_mago(mago: MagoStats) -> bool:
@@ -120,7 +90,6 @@ func try_advance_arete(mago: MagoStats) -> bool:
 			SignalBus.mago_ascended.emit(mago)
 		return true
 	else:
-		# XP still spent on failed attempt
 		mago.experience -= cost
 		SignalBus.mago_stat_changed.emit(mago, "experience", mago.experience + cost, mago.experience)
 		return false

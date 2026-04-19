@@ -12,10 +12,7 @@
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
 
-[node name="MapLayer" type="CanvasLayer" parent="."]
-layer = 0
-
-[node name="RioMap" parent="MapLayer" instance=ExtResource("2_map")]
+[node name="RioMap" parent="." instance=ExtResource("2_map")]
 unique_name_in_owner = true
 
 [node name="UILayer" type="CanvasLayer" parent="."]

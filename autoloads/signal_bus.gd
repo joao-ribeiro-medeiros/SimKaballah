@@ -9,6 +9,7 @@ signal game_paused(is_paused: bool)
 signal encounter_spawned(encounter_def, location_id: String)
 signal encounter_started(encounter_def, assigned_magos: Array)
 signal encounter_resolved(outcome)
+signal encounter_expired(location_id: String)
 
 # Mago
 signal mago_stat_changed(mago, stat_name: String, old_val, new_val)

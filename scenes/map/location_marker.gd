@@ -7,6 +7,7 @@ extends Area2D
 @onready var label: Label = $Label
 @onready var dot: Polygon2D = $Dot
 @onready var encounter_ring: Polygon2D = $EncounterRing
+@onready var encounter_label: Label = $EncounterLabel
 
 var _has_encounter: bool = false
 var _is_hovered: bool = false
@@ -15,26 +16,24 @@ var _encounter_tween: Tween = null
 
 func _ready() -> void:
 	label.text = location_name
-	input_event.connect(_on_input_event)
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	if encounter_ring:
 		encounter_ring.hide()
-
-
-func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		SignalBus.location_clicked.emit(location_id)
+	if encounter_label:
+		encounter_label.hide()
 
 
 func _on_mouse_entered() -> void:
 	_is_hovered = true
-	modulate = Color(1.3, 1.3, 1.3)
+	if not _has_encounter:
+		modulate = Color(1.3, 1.3, 1.3)
 
 
 func _on_mouse_exited() -> void:
 	_is_hovered = false
-	modulate = Color.WHITE
+	if not _has_encounter:
+		modulate = Color.WHITE
 
 
 func get_location_data() -> Dictionary:
@@ -55,20 +54,26 @@ func show_encounter_marker(show_it: bool) -> void:
 	if show_it:
 		if encounter_ring:
 			encounter_ring.show()
-		# Tween-based pulsing: red/orange color oscillation on Dot
+		if encounter_label:
+			encounter_label.show()
 		_start_pulse()
 	else:
 		if encounter_ring:
 			encounter_ring.hide()
+		if encounter_label:
+			encounter_label.hide()
 		if dot:
-			dot.color = Color(1, 0.85, 0.4, 0.9) # restore original
+			dot.color = Color(1, 0.85, 0.4, 0.9)
+		modulate = Color.WHITE
 
 
 func set_highlight(on: bool) -> void:
 	if on:
 		modulate = Color(1.4, 1.3, 0.8)
 	else:
-		if _is_hovered:
+		if _has_encounter:
+			pass # pulse handles modulate
+		elif _is_hovered:
 			modulate = Color(1.3, 1.3, 1.3)
 		else:
 			modulate = Color.WHITE
@@ -78,5 +83,11 @@ func _start_pulse() -> void:
 	if dot == null:
 		return
 	_encounter_tween = create_tween().set_loops()
-	_encounter_tween.tween_property(dot, "color", Color(1.0, 0.2, 0.1, 1.0), 0.5)
-	_encounter_tween.tween_property(dot, "color", Color(1.0, 0.6, 0.1, 1.0), 0.5)
+	# Pulse the dot red/orange
+	_encounter_tween.tween_property(dot, "color", Color(1.0, 0.15, 0.05, 1.0), 0.6)
+	_encounter_tween.tween_property(dot, "color", Color(1.0, 0.5, 0.05, 1.0), 0.6)
+	# Also pulse the encounter ring opacity
+	if encounter_ring:
+		var ring_tween: Tween = create_tween().set_loops()
+		ring_tween.tween_property(encounter_ring, "modulate:a", 1.0, 0.6)
+		ring_tween.tween_property(encounter_ring, "modulate:a", 0.4, 0.6)

@@ -461,7 +461,7 @@ func _create_initial_encounters() -> Array[EncounterDef]:
 
 
 func _on_location_clicked(location_id: String) -> void:
-	# Check if any mage is at this location and not traveling
+	# Check for encounters at this location (only fires when no mago is selected)
 	var mago_present := false
 	for mago in PartyManager.magos:
 		if mago.current_location == location_id and not mago.is_traveling:

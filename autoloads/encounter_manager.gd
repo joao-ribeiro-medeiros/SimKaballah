@@ -30,6 +30,7 @@ func _on_time_tick(delta_game_seconds: float) -> void:
 	for loc_id in expired_encounters:
 		_encounter_timers.erase(loc_id)
 		active_encounters.erase(loc_id)
+		SignalBus.encounter_expired.emit(loc_id)
 
 
 func tick() -> void:

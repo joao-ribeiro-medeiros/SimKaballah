@@ -31,7 +31,7 @@ layout_mode = 2
 [node name="LocationLabel" type="Label" parent="HBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Copacabana"
+text = "Lapa"
 custom_minimum_size = Vector2(150, 0)
 
 [node name="Sep3" type="VSeparator" parent="HBox"]
